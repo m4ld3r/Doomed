@@ -46,6 +46,7 @@ int main() {
                     {"Sqr",       "SQR",       "sqrt"},
                     {"Do","do",":"}};
     //cout << "Enter full PATH with name file.pas:\n";
+    
     string str = "/home/n_malder/projects/Doomed/files/Паскалюка/main.pas", str2, word, buffer;//cin >> str;
     char separator;
     bool fl1 = false, fl_Var = false;
@@ -202,7 +203,7 @@ int main() {
         }
     } else {
         //cout << "\nFile not found :(\n";
-        system("zenity --entry --text \"I2\"");
+        system("zenity --error \\ --text=\"Could not find /var/log/syslog.\"");
         system("pause");
         return -1;
     }
