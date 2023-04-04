@@ -16,7 +16,7 @@ string replacement(Data* d, const int size, string word){
 }
 
 int main() {
-    string str, str2, word, buffer;
+    string str, py_file, word, buffer;
     char separator;
     bool fl1 = false, fl_Var = false;
     const int size = 27;
@@ -64,8 +64,8 @@ int main() {
         system("zenity --entry --text \"I1\"");
         //cout << "\nFile found :D\n\nEnter full PATH with name file.py:\n";
         str = "/home/n_malder/projects/Doomed/files/Змея/main.py";//cin >> str;
-        str2 = str; str2.pop_back();
-        ofstream w_Py(str2);
+        py_file = str; py_file.pop_back();
+        ofstream w_Py(py_file);
         if (w_Py.is_open()) {
             w_Py << "from random import*\nfrom math import*\n";
             while (!o_Pas.eof()) {
@@ -192,7 +192,7 @@ int main() {
             w_Py.close();
             o_Pas.close();
 //READY
-            ifstream pythonB(str2); ofstream pythonA(str);
+            ifstream pythonB(py_file); ofstream pythonA(str);
             if(pythonB.is_open() && pythonA.is_open()){
                 while(!pythonB.eof()){
                     pythonB.get(separator);
@@ -202,7 +202,7 @@ int main() {
                 }
                 pythonA.close();
                 pythonB.close();
-                remove(str2.c_str());
+                remove(py_file.c_str());
             }
             system("(echo 10; sleep 1; echo 30; sleep 1; echo 40; sleep 1; echo 50; sleep 1; echo 60; sleep 1; echo 70; sleep 1; echo 80; sleep 1; echo 90; sleep 1; echo 100; sleep 1;) | zenity --progress \\ --title=\"Update System Logs\" \\ --text=\"Scanning mail logs...\" \\ --percentage=0");
         } else {

@@ -17,7 +17,6 @@ string replacement(Data* d, const int size, string word){
 
 int main() {
     const int size = 27;
-    int place = 0, kol = 0;
     Data d[size] = {{"write",    "Write",    "print"},
                     {"writeln",  "Writeln",  "print"},
                     {"Byte",     "byte",     "int"},
@@ -45,33 +44,34 @@ int main() {
                     {"Power",       "POWER",       "pow"},
                     {"Sqr",       "SQR",       "sqrt"},
                     {"Do","do",":"}};
-    //cout << "Enter full PATH with name file.pas:\n";
-    
-    string str = "/home/n_malder/projects/Doomed/files/Паскалюка/main.pas", str2, word, buffer;//cin >> str;
+    string pas_file, py_file, word, buffer;
     char separator;
     bool fl1 = false, fl_Var = false;
-    ifstream o_Pas(str);
-    if (o_Pas.is_open()) {
-        system("zenity --entry --text \"I1\"");
-        //cout << "\nFile found :D\n\nEnter full PATH with name file.py:\n";
-        str = "/home/n_malder/projects/Doomed/files/Змея/main.py";//cin >> str;
-        str2 = str; str2.pop_back();
-        ofstream w_Py(str2);
-        if (w_Py.is_open()) {
-            w_Py << "from random import*\nfrom math import*\n";
-            while (!o_Pas.eof()) kol++;
-            system("./end.sh");
-        } else {
-            cout << "\nUnsuccessful creation of the file.py :(\n";
-            system("pause");
-            return -2;
+    int place = 0, kol = 0;
+    
+    system("FILE=\`zenity --file-selection --title=\"Select .pas file\"\` && echo \"$FILE\" > bufer");
+    ifstream buffer_file("bufer");
+    getline(buffer_file, pas_file);
+    buffer_file.close();
+    system("rm bufer");
+    string check_pas = pas_file.substr(pas_file.size()-4);
+    if(check_pas != ".pas") system("zenity --error \ --text=\"Invalid name of file\"");
+    else{
+        ifstream o_Pas(pas_file);
+        if (o_Pas.is_open()) {
+            //вызов zenity c выбором директории, где сохранить питоновский файл;
+           //продумать под каким именем и как сохранять файл (посмотреть формы в zenity) 
+            ofstream w_Py(py_file);
+            if (w_Py.is_open()) {
+                cout << "+";
+            } else {
+                system("zenity --error \ --text=\"Failed to open .py file\"");
+                return -2;
+            }
+        } else{
+            system("zenity --error \ --text=\"Failed to open .pas file\"");
+            return -1;
         }
-    } else {
-        //cout << "\nFile not found :(\n";
-        system("zenity --error \\ --text=\"Could not find /var/log/syslog.\"");
-        system("pause");
-        return -1;
     }
-    system("pause");
     return 0;
 }
