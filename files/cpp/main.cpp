@@ -16,6 +16,9 @@ string replacement(Data* d, const int size, string word){
 }
 
 int main() {
+    string str, str2, word, buffer;
+    char separator;
+    bool fl1 = false, fl_Var = false;
     const int size = 27;
     int place = 0, kol = 0;
     Data d[size] = {{"write",    "Write",    "print"},
@@ -45,11 +48,17 @@ int main() {
                     {"Power",       "POWER",       "pow"},
                     {"Sqr",       "SQR",       "sqrt"},
                     {"Do","do",":"}};
-    //cout << "Enter full PATH with name file.pas:\n";
+
+    system("FILE=\`zenity --file-selection --title=\"Select .pas file\"\` && echo \"$FILE\" > bufer");
+    ifstream path_to_file("bufer");
+    if(path_to_file.is_open()){
+         getline(path_to_file, str);
+         string check_pas = str.substr(str.size()-4);
+         if(check_pas != ".pas") system("zenity --error \ --text=\"Invalid name of file\"");
+         system ("rm bufer");
+    }
     
-    string str = "/home/n_malder/projects/Doomed/files/Паскалюка/main.pas", str2, word, buffer;//cin >> str;
-    char separator;
-    bool fl1 = false, fl_Var = false;
+
     ifstream o_Pas(str);
     if (o_Pas.is_open()) {
         system("zenity --entry --text \"I1\"");
