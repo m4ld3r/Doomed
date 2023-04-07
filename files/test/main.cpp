@@ -1,5 +1,4 @@
 #include <iostream>
-//#include <cstdio>
 #include <fstream>
 #include <string>
 using namespace std;
@@ -16,6 +15,8 @@ string replacement(Data* d, const int size, string word){
 }
 
 int main() {
+    system("zenity --warning \ --text=\"For work create .py file\"");
+
     const int size = 27;
     Data d[size] = {{"write",    "Write",    "print"},
                     {"writeln",  "Writeln",  "print"},
@@ -49,29 +50,53 @@ int main() {
     bool fl1 = false, fl_Var = false;
     int place = 0, kol = 0;
     
-    system("FILE=\`zenity --file-selection --title=\"Select .pas file\"\` && echo \"$FILE\" > bufer");
+    system("FILE=\`zenity --file-selection --title=\"Select file with an extensions .PAS\"\` && echo \"$FILE\" > bufer");
     ifstream buffer_file("bufer");
-    getline(buffer_file, pas_file);
-    buffer_file.close();
-    system("rm bufer");
-    string check_pas = pas_file.substr(pas_file.size()-4);
-    if(check_pas != ".pas") system("zenity --error \ --text=\"Invalid name of file\"");
-    else{
-        ifstream o_Pas(pas_file);
-        if (o_Pas.is_open()) {
+    if(buffer_file.is_open()){
+        getline(buffer_file, pas_file);
+        buffer_file.close();
+        system("rm bufer");
+        string check_pas = pas_file.substr(pas_file.size()-4);
+        if(check_pas != ".pas"){
+            system("zenity --error \ --text=\"Wrong file extensions\"");
+            return -32;
+        }else{
+            ifstream o_Pas(pas_file);
+            if (o_Pas.is_open()) {
             //вызов zenity c выбором директории, где сохранить питоновский файл;
-           //продумать под каким именем и как сохранять файл (посмотреть формы в zenity) 
-            ofstream w_Py(py_file);
-            if (w_Py.is_open()) {
-                cout << "+";
+            //продумать под каким именем и как сохранять файл (посмотреть формы в zenity) 
+                system("FILE=\`zenity --file-selection --title=\"Select file with an extensions .PY\"\` && echo \"$FILE\" > bufer");        
+                ifstream buffer_file("bufer");
+                if(buffer_file.is_open()){
+                    getline(buffer_file, py_file);
+                    buffer_file.close();
+                    system("rm bufer");
+                    string check_py = py_file.substr(py_file.size()-3);
+                    if(check_py != ".py"){
+                        system("zenity --error \ --text=\"Wrong file extensions\"");
+                        return -31;
+                    } else{
+                        ofstream w_Py(py_file);
+                        if (w_Py.is_open()) {
+                            cout << "+";
+                        } else {
+                            system("zenity --error \ --text=\"Failed to open file.py\"");
+                            return -22;
+                        }
+                    }
+                }else{
+                    system("zenity --error \ --text=\"Failed to choose file\"");
+                    return -12;
+                }
             } else {
-                system("zenity --error \ --text=\"Failed to open .py file\"");
-                return -2;
+                system("zenity --error \ --text=\"Failed to open file.pas\"");
+                return -21;
             }
-        } else{
-            system("zenity --error \ --text=\"Failed to open .pas file\"");
-            return -1;
         }
+    }else {
+        system("zenity --error \ --text=\"Failed to choose file\"");
+        return -11;
     }
+
     return 0;
 }
