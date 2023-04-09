@@ -16,7 +16,7 @@ string replacement(Data* d, const int size, string word){
 }
 
 int main() {
-    string str, py_file, word, buffer;
+    string str = "/mnt/FILES/projects/плюсы на кладбище/Doomed/files/Pascal/main.pas", py_file, word, buffer;
     char separator;
     bool fl1 = false, fl_Var = false;
     const int size = 27;
@@ -49,25 +49,15 @@ int main() {
                     {"Sqr",       "SQR",       "sqrt"},
                     {"Do","do",":"}};
 
-    system("FILE=\`zenity --file-selection --title=\"Select .pas file\"\` && echo \"$FILE\" > bufer");
-    ifstream path_to_file("bufer");
-    if(path_to_file.is_open()){
-         getline(path_to_file, str);
-         string check_pas = str.substr(str.size()-4);
-         if(check_pas != ".pas") system("zenity --error \ --text=\"Invalid name of file\"");
-         system ("rm bufer");
-    }
-    
-
     ifstream o_Pas(str);
     if (o_Pas.is_open()) {
-        system("zenity --entry --text \"I1\"");
-        //cout << "\nFile found :D\n\nEnter full PATH with name file.py:\n";
-        str = "/home/n_malder/projects/Doomed/files/Змея/main.py";//cin >> str;
+        cout << "+1\n";
+        str = "/mnt/FILES/projects/плюсы на кладбище/Doomed/files/Python/main.py";//cin >> str;
         py_file = str; py_file.pop_back();
         ofstream w_Py(py_file);
         if (w_Py.is_open()) {
-            w_Py << "from random import*\nfrom math import*\n";
+            cout << "+2\n";
+            /* w_Py << "from random import*\nfrom math import*\n"; *///прописать только от того, если используется в паскале
             while (!o_Pas.eof()) {
 //READY
                 if(fl1){
@@ -204,18 +194,7 @@ int main() {
                 pythonB.close();
                 remove(py_file.c_str());
             }
-            system("(echo 10; sleep 1; echo 30; sleep 1; echo 40; sleep 1; echo 50; sleep 1; echo 60; sleep 1; echo 70; sleep 1; echo 80; sleep 1; echo 90; sleep 1; echo 100; sleep 1;) | zenity --progress \\ --title=\"Update System Logs\" \\ --text=\"Scanning mail logs...\" \\ --percentage=0");
-        } else {
-            cout << "\nUnsuccessful creation of the file.py :(\n";
-            system("pause");
-            return -2;
         }
-    } else {
-        //cout << "\nFile not found :(\n";
-        system("zenity --error \\ --text=\"Could not find /var/log/syslog.\"");
-        system("pause");
-        return -1;
     }
-    system("pause");
     return 0;
 }
