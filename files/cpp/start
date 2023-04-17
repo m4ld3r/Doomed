@@ -1,0 +1,18 @@
+#!/bin/bash
+# (
+# echo "20" ; sleep 1
+# echo "# Сканирование .pas файла" ; sleep 1
+# echo "40" ; sleep 1
+# echo "# Считывание кодировки" ; sleep 1
+# echo "60" ; sleep 1
+# echo "# Подсчёт кол-ва пробелов" ; sleep 1
+# echo "80" ; sleep 1
+# echo "# Трансляция в .py файл" ; sleep 1
+# echo "100" ; sleep 1
+# ) |
+# zenity --progress \
+#   --title="Обработка" \
+#   --text="Сканирование .pas файла" \
+#   --percentage=0
+#
+(echo "20" ; sleep 1 ; echo "# Сканирование .pas файла" ; sleep 1 ; echo "40" ; sleep 1 ; echo "# Считывание кодировки" ; sleep 1 ; echo "60" ; sleep 1 ; echo "# Подсчёт кол-ва пробелов" ; sleep 1 ; echo "80" ; sleep 1 ; echo "# Трансляция в .py файл" ; sleep 1 ; echo "100" ; sleep 1) | zenity --progress \ --title="Обработка" \ --text="Сканирование .pas файла" \ --percentage=0

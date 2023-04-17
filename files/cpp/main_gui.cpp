@@ -1,6 +1,8 @@
 #include <iostream>
+#include <thread>
 #include <fstream>
 #include <string>
+#include <thread>
 using namespace std;
 
 struct Data{
@@ -12,6 +14,21 @@ string replacement(Data* d, const int size, string word){
         if(word == d[i].input || word == d[i].s_input)
             return d[i].output;
     return word;
+}
+
+void Gui_Progress(){
+    system("(echo \"20\" ; sleep 1 ; echo \"# Сканирование .pas файла\" ; sleep 1 ; echo \"40\" ; sleep 1 ; echo \"# Считывание кодировки\" ; sleep 1 ; echo \"60\" ; sleep 1 ; echo \"# Подсчёт кол-ва пробелов\" ; sleep 1 ; echo \"80\" ; sleep 1 ; echo \"# Трансляция в .py файл\" ; sleep 1 ; echo \"100\" ; sleep 1) | zenity --progress \ --title=\"Обработка\" \ --text=\"Сканирование .pas файла\" \ --percentage=0");
+}
+
+void Processing(ifstream * o_Pas, ofstream * w_Py){
+    string word, buffer;
+    char separator;
+    bool fl1 = false, fl_Var = false;
+    int place = 0, kol = 0;
+
+//здесь будет обработка во 2м потоке
+    /* while(!o_Pas.eof()){ */
+    /* } */
 }
 
 int main() {
@@ -43,11 +60,7 @@ int main() {
                     {"Power",       "POWER",       "pow"},
                     {"Sqr",       "SQR",       "sqrt"},
                     {"Do","do",":"}};
-    string pas_file, py_file, word, buffer;
-    char separator;
-    bool fl1 = false, fl_Var = false;
-    int place = 0, kol = 0;
-    
+    string pas_file, py_file;     
     system("zenity --warning \ --text=\"Для дальнейшей работы создайте файл с расширением .py\"");
     system("FILE=\`zenity --file-selection --title=\"Выберите файл с расширением .PAS\"\` && echo \"$FILE\" > bufer");
     ifstream buffer_file("bufer");
@@ -62,8 +75,6 @@ int main() {
         }else{
             ifstream o_Pas(pas_file);
             if (o_Pas.is_open()) {
-            //вызов zenity c выбором директории, где сохранить питоновский файл;
-            //продумать под каким именем и как сохранять файл (посмотреть формы в zenity) 
                 system("FILE=\`zenity --file-selection --title=\"Выберите файл с расширением .PY\"\` && echo \"$FILE\" > bufer");        
                 ifstream buffer_file("bufer");
                 if(buffer_file.is_open()){
@@ -77,9 +88,11 @@ int main() {
                     } else{
                         ofstream w_Py(py_file);
                         if (w_Py.is_open()) {
-                            /* while(!o_Pas.eof()){ */
-                            /* } */ 
-                            system("zenity --info \ --text=\"Progree end\"");
+                            thread process(Processing, * o_Pas, * w_Py);
+                            thread gui(Gui_Progress);
+                            process.join();
+                            gui.join();
+                            system("zenity --info \ --text=\"Работа завершена\"");
                             o_Pas.close();
                             w_Py.close();
 
