@@ -20,17 +20,6 @@ void Gui_Progress(){
     system("(echo \"20\" ; sleep 1 ; echo \"# Сканирование .pas файла\" ; sleep 1 ; echo \"40\" ; sleep 1 ; echo \"# Считывание кодировки\" ; sleep 1 ; echo \"60\" ; sleep 1 ; echo \"# Подсчёт кол-ва пробелов\" ; sleep 1 ; echo \"80\" ; sleep 1 ; echo \"# Трансляция в .py файл\" ; sleep 1 ; echo \"100\" ; sleep 1) | zenity --progress \ --title=\"Обработка\" \ --text=\"Сканирование .pas файла\" \ --percentage=0");
 }
 
-void Processing(ifstream * o_Pas, ofstream * w_Py){
-    string word, buffer;
-    char separator;
-    bool fl1 = false, fl_Var = false;
-    int place = 0, kol = 0;
-
-//здесь будет обработка во 2м потоке
-    /* while(!o_Pas.eof()){ */
-    /* } */
-}
-
 int main() {
     const int size = 27;
     Data d[size] = {{"write",    "Write",    "print"},
@@ -60,7 +49,10 @@ int main() {
                     {"Power",       "POWER",       "pow"},
                     {"Sqr",       "SQR",       "sqrt"},
                     {"Do","do",":"}};
-    string pas_file, py_file;     
+    string pas_file, py_file, word, buffer;     
+    char separator;
+    bool fl1 = false, fl2 = false;
+    int place = 0, kol = 0;
     system("zenity --warning \ --text=\"Для дальнейшей работы создайте файл с расширением .py\"");
     system("FILE=\`zenity --file-selection --title=\"Выберите файл с расширением .PAS\"\` && echo \"$FILE\" > bufer");
     ifstream buffer_file("bufer");
@@ -88,9 +80,10 @@ int main() {
                     } else{
                         ofstream w_Py(py_file);
                         if (w_Py.is_open()) {
-                            thread process(Processing, * o_Pas, * w_Py);
                             thread gui(Gui_Progress);
-                            process.join();
+                            while(!w_Py.eof()){
+
+                            } 
                             gui.join();
                             system("zenity --info \ --text=\"Работа завершена\"");
                             o_Pas.close();
