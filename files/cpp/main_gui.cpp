@@ -80,11 +80,17 @@ int main() {
                     } else{
                         ofstream w_Py(py_file);
                         if (w_Py.is_open()) {
-                            thread gui(Gui_Progress);
-                            while(!w_Py.eof()){
-                                
+                            //thread gui(Gui_Progress);
+                            while(!o_Pas.eof()){
+                                o_Pas.get(separator);
+                                if(separator == ' ' && kol <= 4) kol++;                                                                                                                                                                               
+                                if(separator == '\n'){
+                                    w_Py << "\n";
+                                    kol = 0;
+                                }
+                                if(kol > 4) w_Py << " ";                                
                             } 
-                            gui.join();
+                            //gui.join();
                             system("zenity --info \ --text=\"Работа завершена\"");
                             o_Pas.close();
                             w_Py.close();
