@@ -6,10 +6,10 @@
 using namespace std;
 
 struct Data{
-    string input, s_input, output;
+    string input, short_input, output;
 };
 
-string replacement(Data* d, const int size, string word){
+string replacement(Data* database, const int size, string word){
     for(int i = 0; i < size; i++)
         if(word == d[i].input || word == d[i].s_input)
             return d[i].output;
@@ -22,7 +22,7 @@ void Gui_Progress(){
 
 int main() {
     const int size = 27;
-    Data d[size] = {{"write",    "Write",    "print"},
+    Data database[size] = {{"write",    "Write",    "print"},
                     {"writeln",  "Writeln",  "print"},
                     {"Byte",     "byte",     "int"},
                     {"Shortint", "shortint", "int"},
@@ -49,7 +49,7 @@ int main() {
                     {"Power",       "POWER",       "pow"},
                     {"Sqr",       "SQR",       "sqrt"},
                     {"Do","do",":"}};
-    string pas_file, py_file, word, buffer;     
+    string pas_file, py_file, word, buffer;
     char separator;
     bool fl1 = false, fl2 = false;
     int place = 0, kol = 0;
@@ -82,7 +82,7 @@ int main() {
                         if (w_Py.is_open()) {
                             thread gui(Gui_Progress);
                             while(!w_Py.eof()){
-
+                                
                             } 
                             gui.join();
                             system("zenity --info \ --text=\"Работа завершена\"");
