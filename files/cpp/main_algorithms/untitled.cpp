@@ -1,26 +1,26 @@
 #include <iostream>
-//#include <cstdio>
 #include <fstream>
 #include <string>
+#include <cstring>
 using namespace std;
 
 struct Data{
     string input, s_input, output;
 };
 
-string replacement(Data* d, const int size, string word){
+string Replacement(Data* database, const int size, string word){
     for(int i = 0; i < size; i++)
-        if(word == d[i].input || word == d[i].s_input)
-            return d[i].output;
+        if(word == database[i].input || word == database[i].s_input)
+            return database[i].output;
     return word;
 }
 
 int main() {
     string str = "/mnt/FILES/projects/плюсы на кладбище/Doomed/files/Pascal/main.pas", py_file, word, buffer;
     char separator;
-    bool fl1 = false, fl_Var = false;
+    bool insert_before = true;
     const int size = 27;
-    int place = 0, kol = 0;
+    int place = 0, number_spaces = 0;
     Data database[size] = {{"write",    "Write",    "print"},
                     {"writeln",  "Writeln",  "print"},
                     {"Byte",     "byte",     "int"},
@@ -54,15 +54,32 @@ int main() {
         str = "/mnt/FILES/projects/плюсы на кладбище/Doomed/files/Python/main.py";
         ofstream w_Py(str);
         if (w_Py.is_open()) {
-                cout << "++";
                 while(!o_Pas.eof()){
+                    place = o_Pas.tellg();
                     o_Pas.get(separator);
-                    if(separator == ' ' && kol <= 4) kol++;
                     if(separator == '\n'){
+                        number_spaces = 0;
+                        insert_before = true;
                         w_Py << "\n";
-                        kol = 0;
+                        continue;
                     }
-                    if(kol > 4) w_Py << " ";
+                    if(separator == ' '){
+                        if(number_spaces <= 4) number_spaces++;
+                        else w_Py << " ";
+                    } 
+                    else{
+                        o_Pas.seekg(place);
+                        if(number_spaces > 4 && insert_before){
+                            w_Py << " ";
+                            insert_before = false;
+                        }
+                        o_Pas >> word;
+                        buffer = Replacement(database, size, word);
+                        if(buffer != word) w_Py << buffer;
+                        /* else{ */
+                            
+                        /* } */
+                    }
                 }
             }
             w_Py.close();

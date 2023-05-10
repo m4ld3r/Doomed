@@ -1,6 +1,4 @@
-iii
-iii
-iii
-    
-    
-        
+    writeln
+        Writeln
+    byte
+            123
