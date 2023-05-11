@@ -23,10 +23,10 @@ void End_processing();/*в конце пройтись по питоновско
 */
 
 int main() {
-    string str = "/mnt/FILES/projects/плюсы на кладбище/Doomed/files/Pascal/main.pas", py_file, word, buffer;
+    string str = "../../Pascal/main.pas", py_file, word, buffer;
     char separator;
     bool insert_before = true, insert_enter = false;
-    const int size = 28;
+    const int size = 27;
     int place = 0, number_spaces = 0;
     Data database[size] = { {"write",    "Write",    "print"},
                     {"writeln",  "Writeln",  "print"},
@@ -54,12 +54,11 @@ int main() {
                     {"Exp",       "EXP",       "exp"},
                     {"Power",       "POWER",       "pow"},
                     {"Sqr",       "SQR",       "sqrt"},
-                    {"random",       "Random",       "randint(0, "},
                     {"Do","do",":"} };
 
     ifstream o_Pas(str);
     if (o_Pas.is_open()) {
-        str = "/mnt/FILES/projects/плюсы на кладбище/Doomed/files/Python/main.py";
+        str = "../../Python/main.py";
         ofstream w_Py(str);
         if (w_Py.is_open()) {
 
@@ -142,6 +141,7 @@ int main() {
                         continue;
                     }
                     if(word == "random"){
+                        cout << "+++\n";
                         w_Py << "randint(0, ";
                         while(word.back()!=')'){
                             o_Pas >> word;
