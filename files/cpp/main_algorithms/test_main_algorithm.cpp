@@ -61,23 +61,22 @@ int main() {
         str = "../../Python/main.py";
         ofstream w_Py(str);
         if (w_Py.is_open()) {
-
             while (!o_Pas.eof()) {
                 place = o_Pas.tellg();
                 o_Pas.get(separator);
-                //READY
+//READY
                 if (separator == '\n') {
                     number_spaces = 0;
                     insert_before = true;
                     w_Py << "\n";
                     continue;
                 }
-                //READY
+//READY
                 if (separator == ' ') {
                     if (number_spaces <= 4) number_spaces++;
                     else w_Py << " ";
                 }
-                //READY
+//READY
                 else {
                     o_Pas.seekg(place);
                     if (number_spaces > 4 && insert_before) {
@@ -98,13 +97,13 @@ int main() {
                         w_Py << buffer << separator;
                         continue;
                     }
-                    //ДОДЕЛАТЬ!!!
+//ДОДЕЛАТЬ!!!
                     if (word == "Var" || word == "var") {
                         /*Есть задумка, чтоб считывать с пас файла имя переменных в массив, и потом в питоновском поправлять на нужный тип данных*/
                         while (separator != '\n') o_Pas.get(separator);
                         continue;
                     }
-                    //READY
+//READY
                     if (word == "const") {
                         while (separator != '\n') {
                             o_Pas >> word;
@@ -123,7 +122,7 @@ int main() {
                         }
                         continue;
                     }
-                    //READY
+//READY
                     if (word == "Read" || word == "read" || word == "Readln" || word == "readln") {
                         o_Pas >> word;
                         while (word.back() != ';') {
@@ -140,6 +139,7 @@ int main() {
                         o_Pas >> word;
                         continue;
                     }
+//READY
                     if(word == "random"){
                         cout << "+++\n";
                         w_Py << "randint(0, ";
@@ -148,6 +148,20 @@ int main() {
                             if(word.back()!='(')w_Py << word;
                         }
                         continue;
+                    }
+//READY
+                    if(word == "for"){
+                        w_Py << word << " ";
+                        o_Pas >> word;
+                        w_Py << word << " in range(";
+                        o_Pas >> word >> word;
+                        w_Py << word << ", ";
+                        o_Pas >> word >> word;
+                        w_Py << word << ")";
+                        continue;
+                    }
+                    if(word == "while"){
+
                     }
                     else w_Py << word;
                 }
