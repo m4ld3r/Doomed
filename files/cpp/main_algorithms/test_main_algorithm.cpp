@@ -3,6 +3,7 @@
 #include <string>
 #include <cstring>
 #include <algorithm>
+#include <ctime>
 using namespace std;
 
 struct Data {
@@ -16,9 +17,7 @@ string Replacement(Data* database, const int size, string word) {
     return word;
 }
 
-void End_processing();/*в конце пройтись по питоновскому файлу для поправки недочётов обработки
-1. Проверка пустых строк;
-2. Проверка пробелов перед словами в начале строки
+void End_processing(string py_file);/*в конце пройтись по питоновскому файлу для поправки недочётов обработки
 3. Подумать насчёт констант что сделать (напоминаю что в дальнейшем они должны все быть в верхнем регистре)
 */
 
@@ -84,7 +83,6 @@ int main() {
                         insert_before = false;
                     }
                     o_Pas >> word;
-                    cout << word << endl;
                     if (word == "Begin" || word == "begin" || word == "End." || word == "end.") continue;
                     if (word == "Program" || word == "program") {
                         while (separator != '\n') o_Pas.get(separator);
@@ -127,7 +125,7 @@ int main() {
                         o_Pas >> word;
                         while (word.back() != ';') {
                             if (word.back() == ',') word.pop_back();
-                            if (word != ")" && word != "(") w_Py << word << "=input();\n";
+                            if (word != ")" && word != "(") w_Py << word << "=input()\n";
                             o_Pas >> word;
                         }
                         continue;
@@ -160,15 +158,52 @@ int main() {
                         w_Py << word << ")";
                         continue;
                     }
-                    if(word == "while"){
 
-                    }
-                    else w_Py << word;
+                    else{
+                        w_Py << word;
+                    } 
                 }
             }
         }
         w_Py.close();
         o_Pas.close();
+        End_processing(str);
     }
     return 0;
+}
+
+void End_processing(string py_file){
+    string line;
+    char separator;
+    int place;
+    
+    system("touch buffer");
+    ifstream file(py_file);
+    ofstream buffer("buffer");
+    while (getline(file, line)) buffer << line << endl;
+    buffer.close(); file.close();
+
+    ifstream last_change("buffer");
+    ofstream py(py_file);
+    while (!last_change.eof()){
+        place = last_change.tellg();
+        last_change.get(separator);
+        if(separator == ' '){
+            getline(last_change, line);
+            if (line != "") py << line << endl;
+            else continue;
+        }
+        else{
+            last_change.seekg(place);
+            getline(last_change, line);
+            if (line != "") py << line << endl;
+            place = last_change.tellg();
+            last_change.get(separator);
+            if(separator == '\n') break;
+            else last_change.seekg(place);
+            if(line == "") continue;
+        }
+    }
+    last_change.close(); py.close();
+    system("rm buffer");
 }

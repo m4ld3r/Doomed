@@ -11,8 +11,8 @@ struct Data{
 
 string replacement(Data* database, const int size, string word){
     for(int i = 0; i < size; i++)
-        if(word == d[i].input || word == d[i].s_input)
-            return d[i].output;
+        if(word == database[i].input || word == database[i].short_input)
+            return database[i].output;
     return word;
 }
 
@@ -59,12 +59,15 @@ int main() {
     if(buffer_file.is_open()){
         getline(buffer_file, pas_file);
         buffer_file.close();
-        system("rm bufer");
         string check_pas = pas_file.substr(pas_file.size()-4);
         if(check_pas != ".pas"){
             system("zenity --error \ --text=\"Неправильное расширение файла для Pascal\"");
             return -32;
         }else{
+            system("rm bufer");
+            fstream re_recording_pas(pas_file, ios::app | ios::ate);
+            if(re_recording_pas.is_open()) re_recording_pas << "\n";
+            re_recording_pas.close();
             ifstream o_Pas(pas_file);
             if (o_Pas.is_open()) {
                 system("FILE=\`zenity --file-selection --title=\"Выберите файл с расширением .PY\"\` && echo \"$FILE\" > bufer");        
@@ -80,7 +83,7 @@ int main() {
                     } else{
                         ofstream w_Py(py_file);
                         if (w_Py.is_open()) {
-                            //thread gui(Gui_Progress);
+                            thread gui(Gui_Progress);
                             while(!o_Pas.eof()){
                                 o_Pas.get(separator);
                                 if(separator == ' ' && kol <= 4) kol++;                                                                                                                                                                               
@@ -90,7 +93,7 @@ int main() {
                                 }
                                 if(kol > 4) w_Py << " ";                                
                             } 
-                            //gui.join();
+                            gui.join();
                             system("zenity --info \ --text=\"Работа завершена\"");
                             o_Pas.close();
                             w_Py.close();
