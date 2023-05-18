@@ -7,13 +7,13 @@
 using namespace std;
 
 struct Data {
-    string input, s_input, output;
+    string request, responce;
 };
 
 string Replacement(Data* database, const int size, string word) {
     for (int i = 0; i < size; i++)
-        if (word == database[i].input || word == database[i].s_input)
-            return database[i].output;
+        if (word == database[i].request)
+            return database[i].responce;
     return word;
 }
 
@@ -24,36 +24,25 @@ void End_processing(string py_file);/*в конце пройтись по пит
 int main() {
     string str = "../../Pascal/main.pas", py_file, word, buffer;
     char separator;
-    bool insert_before = true, insert_enter = false;
-    const int size = 27;
-    int place = 0, number_spaces = 0;
-    Data database[size] = { {"write",    "Write",    "print"},
-                    {"writeln",  "Writeln",  "print"},
-                    {"Byte",     "byte",     "int"},
-                    {"Shortint", "shortint", "int"},
-                    {"Word",     "word",     "int"},
-                    {"Smallint", "smallint", "int"},
-                    {"Integer",  "integer",  "int"},
-                    {"Longint",  "logint",   "int"},
-                    {"int64",    "Int64",    "int"},
-                    {"Real",     "real",     "fl1oat"},
-                    {"Double",   "double",   "fl1oat"},
-                    {"Single",   "single",   "fl1oat"},
-                    {"div",      "Div",      "//"},
-                    {"mod",      "Mod",      "%"},
-                    {":=",       ":=",       "="},
-                    {"then",     "do",       ":"},
-                    {"else",     "Else",     "else:"},
-                    {"=",        "=",        "=="},
-                    {"<>",       "<>",       "!="},
-                    {"If",       "IF",       "if"},
-                    {"Ceil",       "CEIL",       "ceil"},
-                    {"fl1oor",       "fl1OOR",       "fl1oor"},
-                    {"Trunc",       "TRUNC",       "trunc"},
-                    {"Exp",       "EXP",       "exp"},
-                    {"Power",       "POWER",       "pow"},
-                    {"Sqr",       "SQR",       "sqrt"},
-                    {"Do","do",":"} };
+    bool insert_before = true, insert_enter = false, insert_math_bibl = false;
+    const int size = 16;
+    int place = 0, number_spaces = 0;//не забыть про char
+    Data database[size] = { {"write", "print"},
+                    {"integer", "int"},
+                    {"real", "float"},
+                    {"char", "string"},
+                    {"string", "string"},
+                    {"boolean", "bool"},
+                    {"div", "//"},
+                    {"mod", "%"},
+                    {":=", "="},
+                    {"then", ":"},
+                    {"do", ":"},
+                    {"else", "else:"},
+                    {"=", "=="},
+                    {"<>", "!="},
+                    {"If", "if"},
+                    {"trunc", "trunc"}};
 
     ifstream o_Pas(str);
     if (o_Pas.is_open()) {
@@ -83,8 +72,20 @@ int main() {
                         insert_before = false;
                     }
                     o_Pas >> word;
-                    if (word == "Begin" || word == "begin" || word == "End." || word == "end.") continue;
-                    if (word == "Program" || word == "program") {
+                    cout << word << endl;
+//ДОДЕЛАТЬ
+                    /* if(word == "abs" || word == "sqr" || word == "sqrt" || word == "trunc" || word =="round" || word == "int" || word == "frac"){ */
+                    /*     place = w_Py.tellp(); */
+                    /*     w_Py.seekp(0); */
+                    /*     w_Py << "from math import*\n"; */
+                    /*     w_Py.seekp(place); */
+                    /* } */
+                    if (word == "begin") continue;
+                    if(word == "end."){
+                        cout << "+\n\n";
+                        break;
+                    }
+                    if (word == "program") {
                         while (separator != '\n') o_Pas.get(separator);
                         continue;
                     }
@@ -96,12 +97,11 @@ int main() {
                         continue;
                     }
 //ДОДЕЛАТЬ!!!
-                    if (word == "Var" || word == "var") {
+                    if (word == "var") {
                         /*Есть задумка, чтоб считывать с пас файла имя переменных в массив, и потом в питоновском поправлять на нужный тип данных*/
-                        while (separator != '\n') o_Pas.get(separator);
+                        getline(o_Pas, word);
                         continue;
                     }
-//READY
                     if (word == "const") {
                         while (separator != '\n') {
                             o_Pas >> word;
@@ -120,8 +120,7 @@ int main() {
                         }
                         continue;
                     }
-//READY
-                    if (word == "Read" || word == "read" || word == "Readln" || word == "readln") {
+                    if (word == "read" || word == "readln") {
                         o_Pas >> word;
                         while (word.back() != ';') {
                             if (word.back() == ',') word.pop_back();
@@ -130,16 +129,15 @@ int main() {
                         }
                         continue;
                     }
-//READY
                     if(word == "sqr"){
                         o_Pas >> word >> word;
                         w_Py << word << "*" << word;
                         o_Pas >> word;
                         continue;
                     }
-//READY
                     if(word == "random"){
-                        cout << "+++\n";
+                        /* w_Py.seekp(0); */
+                        /* w_Py << "from random import*\n"; */
                         w_Py << "randint(0, ";
                         while(word.back()!=')'){
                             o_Pas >> word;
@@ -147,7 +145,6 @@ int main() {
                         }
                         continue;
                     }
-//READY
                     if(word == "for"){
                         w_Py << word << " ";
                         o_Pas >> word;
@@ -158,7 +155,14 @@ int main() {
                         w_Py << word << ")";
                         continue;
                     }
-
+//ДОДЕЛАТЬ
+                    if(word == "procedure"){
+                        continue;
+                    }
+//ДОДЕЛАТЬ
+                    if(word == "write"){
+                        continue;
+                    }
                     else{
                         w_Py << word;
                     } 
@@ -171,7 +175,7 @@ int main() {
     }
     return 0;
 }
-
+//пока новых задумок нет
 void End_processing(string py_file){
     string line;
     char separator;
